@@ -29,18 +29,15 @@ public class ProducerDemo {
 
         ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "hello world");
 
-        producer.send(record, new Callback() {
-            @Override
-            public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                if (e != null) {
-                    logger.error("Error while producing: ", e);
-                } else {
-                    logger.info("Received new metadata \n" +
-                            "Topic: " + recordMetadata.topic() + "\n" +
-                            "Partition: " + recordMetadata.partition() + "\n" +
-                            "Offset: " + recordMetadata.offset() + "\n" +
-                            "Timestamp: " + recordMetadata.timestamp());
-                }
+        producer.send(record, (recordMetadata, e) -> {
+            if (e != null) {
+                logger.error("Error while producing: ", e);
+            } else {
+                logger.info("Received new metadata \n" +
+                        "Topic: " + recordMetadata.topic() + "\n" +
+                        "Partition: " + recordMetadata.partition() + "\n" +
+                        "Offset: " + recordMetadata.offset() + "\n" +
+                        "Timestamp: " + recordMetadata.timestamp());
             }
         });
 
